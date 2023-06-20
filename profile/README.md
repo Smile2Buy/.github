@@ -10,7 +10,4 @@
 🧙 Remember, you can do mighty things with the power of [Markdown](https://docs.github.com/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
 
 ## Implementation history
-
-### Infra
-
-- [ ] a1
+- [ ] ![Infra badge](https://img.shields.io/badge/infra-terraform-7B42BC) job1
