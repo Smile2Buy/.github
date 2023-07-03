@@ -1,0 +1,38 @@
+name: History Hub
+on:
+  repository_dispatch:
+    types: [readme_updated]
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out
+      uses: actions/checkout@v3
+
+    # each repo
+    - name: Check out infra-repo
+      uses: actions/checkout@v3
+      with:
+        repository: Smile2Buy/s2b-infra
+        path: infra
+        token: ${{ secrets.PAT }}
+
+    - name: Generate merged README.md
+      run: |
+        cp -f skeleton/README.md profile/README.md # Using -f option to overwrite existing out-dated history
+
+        # each repo
+        echo "## Infra implementation history" > profile/README.md
+        grep '\- \[x\]' infra/README.md \
+          | sed 's/- \[x\]/- ![Infra badge](https://img.shields.io/badge/infra-7B42BC)/' \
+          >> profile/README.md
+
+    - name: Commit and push if it changed
+      run: |
+        git diff
+        git config --global user.email "action@github.com"
+        git config --global user.name "GitHub Action"
+        git commit -am "Merge history spokes into hub" || exit 0
+        git push
+
