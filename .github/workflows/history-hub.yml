@@ -10,7 +10,7 @@ jobs:
     - name: Check out
       uses: actions/checkout@v3
 
-    # each repo
+    # Occupied, should create whenever added new spoke
     - name: Check out infra-repo
       uses: actions/checkout@v3
       with:
@@ -19,10 +19,10 @@ jobs:
         token: ${{ secrets.PAT }}
 
     - name: Generate merged README.md
+      # line: cp and echo -> Common, using -f option to overwrite existing out-dated README.md
+      # line: grep -> Occupied, should create whenever adding new spoke
       run: |
-        cp -f skeleton/README.md profile/README.md # Using -f option to overwrite existing out-dated history
-
-        # each repo
+        cp -f skeleton/README.md profile/README.md
         echo "## Infra implementation history" > profile/README.md
         grep '\- \[x\]' infra/README.md \
           | sed 's/- \[x\]/- ![Infra badge](https://img.shields.io/badge/infra-7B42BC)/' \
@@ -33,6 +33,6 @@ jobs:
         git diff
         git config --global user.email "action@github.com"
         git config --global user.name "GitHub Action"
-        git commit -am "Merge history spokes into hub" || exit 0
+        git commit -am "Build history-hub by merging history-spokes" || exit 0
         git push
 
