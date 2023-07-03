@@ -19,7 +19,7 @@ jobs:
         token: ${{ secrets.PAT }}
 
     - name: Generate merged README.md
-      # line: cp and echo -> Common, using -f option to overwrite existing out-dated README.md
+      # line: cp and echo -> Shared, using -f option to overwrite existing out-dated README.md
       # line: grep -> Occupied, should create whenever adding new spoke
       run: |
         cp -f skeleton/README.md profile/README.md
