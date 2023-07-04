@@ -1,7 +1,8 @@
 name: History Hub
 on:
+  # web hook event that is corresponding to actions in every spoke repo
   repository_dispatch:
-    types: [readme_updated] # web hook event that is corresponding to actions in every spoke repo
+    types: [readme_updated]
 
 jobs:
   update-readme:
