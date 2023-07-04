@@ -1,0 +1,39 @@
+name: History Hub
+on:
+  # web hook event that is corresponding to actions in every spoke repo
+  repository_dispatch:
+    types: [readme_updated]
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out
+      uses: actions/checkout@v3
+
+    # Occupied, should create whenever added new spoke
+    - name: Check out infra-repo
+      uses: actions/checkout@v3
+      with:
+        repository: Smile2Buy/s2b-infra
+        path: infra
+        token: ${{ secrets.PAT }}
+
+    - name: Generate merged README.md
+      # line: cp and echo -> Shared, using -f option to overwrite existing out-dated README.md
+      # line: grep -> Occupied, should create whenever adding new spoke
+      run: |
+        cp -f skeleton/README.md profile/README.md
+        echo "## Infra implementation history" > profile/README.md
+        grep '\- \[x\]' infra/README.md \
+          | sed 's/- \[x\]/- ![Infra badge](https://img.shields.io/badge/infra-7B42BC)/' \
+          >> profile/README.md
+
+    - name: Commit and push if it changed
+      run: |
+        git diff
+        git config --global user.email "action@github.com"
+        git config --global user.name "GitHub Action"
+        git commit -am "Build history-hub by merging history-spokes" || exit 0
+        git push
+
