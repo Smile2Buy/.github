@@ -28,7 +28,7 @@ jobs:
         cp -f skeleton/README.md profile/README.md
         echo "## Infra implementation history" > profile/README.md
         cat infra/README.md \
-          | perl -lne 'print if /^\s*- \[[x]\]/'
+          | perl -lne 'print if /^(\s*- \[[x]\]|#)/'
           | sed "s/- \[x\]/- $INFRA_MARKER/" \
           >> profile/README.md
 
