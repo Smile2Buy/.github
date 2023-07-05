@@ -23,14 +23,26 @@ jobs:
         path: infra
         token: ${{ secrets.PAT }}
 
+    - name: check if infra readme checkouted well
+      run: |
+        cat infra/README.md
+
     # Fetch origin; Smile2Buy/.github
     - name: Checkout
       uses: actions/checkout@v3
+
+    - name: check if previous readme checkouted well
+      run: |
+        cat profile/README.md
 
     # Copy skeleton as base
     - name: Copy skeleton
       run: |
         cp -f skeleton/README.md profile/README.md
+
+    - name: check if previous readme replaced by skeleton well
+      run: |
+        cat profile/README.md
 
     # Append done items from infra-repo
     - name: Append history of infra
@@ -40,6 +52,10 @@ jobs:
           | perl -lne 'print if /^(\s*- \[[x]\]|#{3,})/' \
           | sed "s#- \[x\]#- $INFRA_MARKER#" >> profile/README.md
         rm -rf infra
+
+    - name: check if infra history appended well
+      run: |
+        cat profile/README.md
 
     # Create PR
     - name: Create Pull Request
