@@ -43,19 +43,7 @@ jobs:
 
     # Create PR
     - name: Create Pull Request
-      run: |
-        git config --local user.emal "action@github.com"
-        git config --local user.name "GitHub Action"
-        git checkout -b changes-branch
-        git add .
-        git commit -m "docs: history across org has been merged"
-        gh pr create \
-          --title "docs: History-hub updated by ${GITHUB_RUN_NUMBER}" \
-          --body "" \
-          --base main \
-          --head changes-branch \
-          --repo ${{ github.repository }}
-      env:
-        GH_TOKEN: ${{ secrets.PAT }}
-
-
+      uses: peter-evans/create-pull-request@v5
+      with:
+        commit-message: docs: history-hub updated
+        title: "docs: History-hub updated ${GITHUB_RUN_NUMBER}th"
