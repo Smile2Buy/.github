@@ -45,5 +45,6 @@ jobs:
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v5
       with:
+        token: ${{ secrets.PAT }}
         commit-message: "docs: history-hub updated"
         title: "docs: History-hub updated ${GITHUB_RUN_NUMBER}th"
