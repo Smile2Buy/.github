@@ -8,6 +8,7 @@ jobs:
   update-readme:
     runs-on: ubuntu-latest
     env:
+      INFRA_TITLE: "## Infra implementation history"
       INFRA_MARKER: "![Infra badge](https://img.shields.io/badge/infra-7B42BC)"
     steps:
     - name: Check out
@@ -22,15 +23,10 @@ jobs:
         token: ${{ secrets.PAT }}
 
     - name: Generate merged README.md
-      # line: cp and echo -> Shared, using -f option to overwrite existing out-dated README.md
-      # line: grep -> Occupied, should create whenever adding new spoke
       run: |
         cp -f skeleton/README.md profile/README.md
-        echo "## Infra implementation history" > profile/README.md
-        cat infra/README.md \
-          | perl -lne 'print if /^(\s*- \[[x]\]|#{3,})/'
-          | sed "s/- \[x\]/- $INFRA_MARKER/" \
-          >> profile/README.md
+        echo "$INFRA_TITLE" > profile/README.md
+        cat infra/README.md | perl -lne 'print if /^(\s*- \[[x]\]|#{3,})/' | sed "s/- \[x\]/- $INFRA_MARKER/" >> profile/README.md
 
     - name: Commit and push if it changed
       run: |
