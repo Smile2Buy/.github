@@ -11,39 +11,39 @@ jobs:
       INFRA_TITLE: "## Infra implementation history"
       INFRA_MARKER: "![Infra badge](https://img.shields.io/badge/infra-7B42BC)"
     steps:
-    - name: Check out infra-repo
+
+    # Fetch README.md from infra-repo
+    - name: Checkout infra-repo
       uses: actions/checkout@v3
       with:
         repository: Smile2Buy/s2b-infra
+        sparse-checkout: |
+          README.md
+        sparse-checkout-cone-mode: false
         path: infra
         token: ${{ secrets.PAT }}
 
-    - name: Check out
+    # Fetch origin; Smile2Buy/.github
+    - name: Checkout
       uses: actions/checkout@v3
 
-
-    - name: Generate merged README.md
+    # Copy skeleton as base
+    - name: Copy skeleton
       run: |
         cp -f skeleton/README.md profile/README.md
+
+    # Append done items from infra-repo
+    - name: Append history of infra
+      run: |
         echo "$INFRA_TITLE" > profile/README.md
         cat infra/README.md \
           | perl -lne 'print if /^(\s*- \[[x]\]|#{3,})/' \
           | sed "s#- \[x\]#- $INFRA_MARKER#" >> profile/README.md
+        rm -rf infra
 
+    # Create PR
     - name: Create Pull Request
-      run: |
-        git config --local user.emal "action@github.com"
-        git config --local user.name "GitHub Action"
-        git checkout -b changes-branch
-        git add .
-        git commit -m "docs: history across org has been merged"
-        gh pr create \
-          --title "docs: History-hub updated by ${GITHUB_RUN_NUMBER}" \
-          --body "" \
-          --base main \
-          --head changes-branch \
-          --repo ${{ github.repository }}
-      env:
-        GH_TOKEN: ${{ secrets.PAT }}
-
-
+      uses: peter-evans/create-pull-request@v5
+      with:
+        commit-message: docs: history-hub updated
+        title: "docs: History-hub updated ${GITHUB_RUN_NUMBER}th"
