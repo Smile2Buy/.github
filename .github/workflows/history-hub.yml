@@ -44,10 +44,12 @@ jobs:
       run: |
         cat profile/README.md
 
+    ################ Verified aboved #################
+
     # Append done items from infra-repo
     - name: Append history of infra
       run: |
-        echo "$INFRA_TITLE" > profile/README.md
+        echo "$INFRA_TITLE" >> profile/README.md
         cat infra/README.md \
           | perl -lne 'print if /^(\s*- \[[x]\]|#{3,})/' \
           | sed "s#- \[x\]#- $INFRA_MARKER#" >> profile/README.md
