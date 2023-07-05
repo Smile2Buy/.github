@@ -11,16 +11,16 @@ jobs:
       INFRA_TITLE: "## Infra implementation history"
       INFRA_MARKER: "![Infra badge](https://img.shields.io/badge/infra-7B42BC)"
     steps:
-    - name: Check out
-      uses: actions/checkout@v3
-
-    # Occupied, should create whenever added new spoke
     - name: Check out infra-repo
       uses: actions/checkout@v3
       with:
         repository: Smile2Buy/s2b-infra
         path: infra
         token: ${{ secrets.PAT }}
+
+    - name: Check out
+      uses: actions/checkout@v3
+
 
     - name: Generate merged README.md
       run: |
