@@ -30,13 +30,18 @@ jobs:
           | perl -lne 'print if /^(\s*- \[[x]\]|#{3,})/' \
           | sed "s#- \[x\]#- $INFRA_MARKER#" >> profile/README.md
 
-    - name: Commit and push if it changed
+    - name: Create Pull Request
       run: |
-        git diff
-        git config --global user.email "action@github.com"
-        git config --global user.name "GitHub Action"
-        git commit -am "Build history-hub by merging history-spokes" || exit 0
-        git push origin HEAD:main --force
+        git checkout -b changes-branch
+        git add .
+        git commit -m "docs: history across org has been merged"
+        gh pr create \
+          --title "docs: History-hub updated by ${GITHUB_RUN_NUMBER" \
+          --body "" \
+          --base main \
+          --head changes-branch \
+          --repo ${{ github.repository }}
       env:
-        GITHUB_TOKEN: ${{ secrets.PAT }}
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
