@@ -38,7 +38,7 @@ jobs:
         git add .
         git commit -m "docs: history across org has been merged"
         gh pr create \
-          --title "docs: History-hub updated by ${GITHUB_RUN_NUMBER" \
+          --title "docs: History-hub updated by ${GITHUB_RUN_NUMBER}" \
           --body "" \
           --base main \
           --head changes-branch \
