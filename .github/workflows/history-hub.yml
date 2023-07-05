@@ -24,14 +24,17 @@ jobs:
     - name: Check out
       uses: actions/checkout@v3
 
-
-    - name: Generate merged README.md
+    - name: Copy skeleton
       run: |
         cp -f skeleton/README.md profile/README.md
+
+    - name: Append history of infra
+      run: |
         echo "$INFRA_TITLE" > profile/README.md
         cat infra/README.md \
           | perl -lne 'print if /^(\s*- \[[x]\]|#{3,})/' \
           | sed "s#- \[x\]#- $INFRA_MARKER#" >> profile/README.md
+        rm -rf infra
 
     - name: Create Pull Request
       run: |
