@@ -48,4 +48,10 @@ jobs:
         token: ${{ secrets.PAT }}
         commit-message: "docs: history-hub updated"
         title: "docs: Update #${{ github.run_number }} in History Hub"
+        body: |
+          This PR reflects the latest updates from the targets(aka. spokes) in my organization to the profile/README.
+
+          The changes were automated by the History-hub GitHub Action.
+
+          Hope this ensures that my profile/README stays in sync with changes on wherever.
         path: hub
