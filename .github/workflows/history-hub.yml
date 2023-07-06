@@ -47,5 +47,5 @@ jobs:
       with:
         token: ${{ secrets.PAT }}
         commit-message: "docs: history-hub updated"
-        title: "docs: History-hub updated ${GITHUB_RUN_NUMBER}th"
+        title: "docs: Update #${{ github.run_number }} in History Hub"
         path: hub
