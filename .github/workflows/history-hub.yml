@@ -46,6 +46,24 @@ jobs:
 
     ################ Verified aboved #################
 
+    # for testing 1
+    - name: test if shell script works well 1
+      run: |
+        cat infra/README.md
+
+    # for testing 2
+    - name: test if shell script works well 2
+      run: |
+        cat infra/README.md \
+          | perl -lne 'print if /^(\s*- \[[x]\]|#{3,})/'
+
+    # for testing 3
+    - name: test if shell script works well 2
+      run: |
+        cat infra/README.md \
+          | perl -lne 'print if /^(\s*- \[[x]\]|#{3,})/' \
+          | sed "s#- \[x\]#- $INFRA_MARKER#"
+
     # Append done items from infra-repo
     - name: Append history of infra
       run: |
