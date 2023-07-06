@@ -11,6 +11,16 @@ jobs:
       INFRA_TITLE: "## Infra implementation history"
       INFRA_MARKER: "![Infra badge](https://img.shields.io/badge/infra-7B42BC)"
     steps:
+    - name: Checkout whole contents of hub-repo under /hub path
+      uses: actions/checkout@v3
+      with:
+        path: hub
+
+    - name: Overwrite content of to-be-updated README.md to skeleton-base
+      run: |
+        cp -f hub/skeleton/README.md hub/profile/README.md
+
+    # <--- Steps for infra-spoke
     - name: Checkout README.md of infra-spoke-repo under /infra path
       uses: actions/checkout@v3
       with:
@@ -21,15 +31,6 @@ jobs:
         path: infra
         token: ${{ secrets.PAT }}
 
-    - name: Checkout whole contents of hub-repo under /hub path
-      uses: actions/checkout@v3
-      with:
-        path: hub
-
-    - name: Overwrite content of to-be-updated README.md to skeleton-base
-      run: |
-        cp -f hub/skeleton/README.md hub/profile/README.md
-
     - name: Append title of infra-spoke history
       run: |
         echo "$INFRA_TITLE" >> hub/profile/README.md
@@ -39,8 +40,8 @@ jobs:
         cat infra/README.md \
           | perl -lne 'print if /^(\s*- \[[x]\]|#{3,})/' \
           | sed "s#- \[x\]#- $INFRA_MARKER#" >> hub/profile/README.md
+    # Steps for infra-spoke --->
 
-    # Create PR
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v5
       with:
