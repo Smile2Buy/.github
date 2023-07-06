@@ -30,21 +30,6 @@ jobs:
       run: |
         cp -f hub/skeleton/README.md hub/profile/README.md
 
-    - name: Test1; if shell script works well
-      run: |
-        cat infra/README.md
-
-    - name: Test2; if shell script works well
-      run: |
-        cat infra/README.md \
-          | perl -lne 'print if /^(\s*- \[[x]\]|#{3,})/'
-
-    - name: Test3; if shell script works well
-      run: |
-        cat infra/README.md \
-          | perl -lne 'print if /^(\s*- \[[x]\]|#{3,})/' \
-          | sed "s#- \[x\]#- $INFRA_MARKER#"
-
     - name: Append title of infra-spoke history
       run: |
         echo "$INFRA_TITLE" >> hub/profile/README.md
