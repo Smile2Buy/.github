@@ -11,9 +11,7 @@ jobs:
       INFRA_TITLE: "## Infra implementation history"
       INFRA_MARKER: "![Infra badge](https://img.shields.io/badge/infra-7B42BC)"
     steps:
-
-    # Fetch README.md from infra-repo
-    - name: Checkout infra-repo
+    - name: Checkout README.md of infra-spoke-repo under /infra path
       uses: actions/checkout@v3
       with:
         repository: Smile2Buy/s2b-infra
@@ -23,59 +21,59 @@ jobs:
         path: infra
         token: ${{ secrets.PAT }}
 
-    - name: check if infra readme checkouted well
+    - name: Check if README.md of infra-spoke-repo checkouted well
       run: |
         cat infra/README.md
 
-    # Fetch origin; Smile2Buy/.github
-    - name: Checkout
+    - name: Checkout whole contents of hub-repo under /hub path
       uses: actions/checkout@v3
+      with:
+        path: hub
 
-    - name: check if previous readme checkouted well
+    - name: Check if to-be-updated README.md of hub-repo checkouted well
       run: |
-        cat profile/README.md
+        cat hub/profile/README.md
 
-    # Copy skeleton as base
-    - name: Copy skeleton
-      run: |
-        cp -f skeleton/README.md profile/README.md
-
-    - name: check if previous readme replaced by skeleton well
-      run: |
-        cat profile/README.md
-
-    ################ Verified aboved #################
-
-    # for testing 1
-    - name: test if shell script works well 1
+    - name: Check if README.md of infra-spoke-repo is still accessible
       run: |
         cat infra/README.md
 
-    # for testing 2
-    - name: test if shell script works well 2
+    - name: Overwrite content of to-be-updated README.md to skeleton-base
+      run: |
+        cp -f hub/skeleton/README.md hub/profile/README.md
+
+    - name: Check if previous readme replaced by skeleton well
+      run: |
+        cat hub/profile/README.md
+
+    - name: Test1; if shell script works well
+      run: |
+        cat infra/README.md
+
+    - name: Test2; if shell script works well
       run: |
         cat infra/README.md \
           | perl -lne 'print if /^(\s*- \[[x]\]|#{3,})/'
 
-    # for testing 3
-    - name: test if shell script works well 2
+    - name: Test3; if shell script works well
       run: |
         cat infra/README.md \
           | perl -lne 'print if /^(\s*- \[[x]\]|#{3,})/' \
           | sed "s#- \[x\]#- $INFRA_MARKER#"
 
-    # Append done items from infra-repo
-    - name: Append history of infra
+    - name: Append title of infra-spoke history
       run: |
-        echo "$INFRA_TITLE" >> profile/README.md
+        echo "$INFRA_TITLE" >> hub/profile/README.md
+
+    - name: Cherry-pick done items from infra-repo and plant to updating REAME.md
+      run: |
         cat infra/README.md \
           | perl -lne 'print if /^(\s*- \[[x]\]|#{3,})/' \
-          | sed "s#- \[x\]#- $INFRA_MARKER#" >> profile/README.md
-        rm -rf infra
+          | sed "s#- \[x\]#- $INFRA_MARKER#" >> hub/profile/README.md
 
-    - name: check if infra history appended well
+    - name: Check if infra-spoke history appended well
       run: |
-        cat profile/README.md
+        cat hub/profile/README.md
 
     # Create PR
     - name: Create Pull Request
@@ -84,3 +82,4 @@ jobs:
         token: ${{ secrets.PAT }}
         commit-message: "docs: history-hub updated"
         title: "docs: History-hub updated ${GITHUB_RUN_NUMBER}th"
+        path: hub
